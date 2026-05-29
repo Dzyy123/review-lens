@@ -134,13 +134,30 @@ flowchart TD
 
 ## 👤 Who it's for
 
-| User | How they use it | Note |
-| :-- | :-- | :-- |
-| 👩‍🔬 **Authors (primary)** | Received review + their own paper → a breakdown report, both a stress-relief checklist and rebuttal ammunition | Most compliance-free (venues explicitly allow authors to use AI) |
-| 🧑‍⚖️ Reviewers (self-check) | Before submitting: do I have a pile of out-of-scope / duplicate / unanswerable asks? | Must follow venue policy; use a privacy-compliant / local model |
-| 🏛️ AC / PC (governance) | Quickly assess review quality; flag padded or negligent reviews | High value; needs platform support |
+Two roles get the most out of it today — **authors** and **reviewers**. Same engine, opposite ends of the same review.
 
-> All three share the same engine; authors are the beachhead.
+### 🧑‍🔬 You're an author — your reviews just came back
+
+- **When** — rebuttal opens and one reviewer dumped dozens of scattered, intimidating comments. You're buried and don't know where to start.
+- **You bring** — the reviews (paste the text) + your paper (PDF path or arXiv link).
+- **You run** — `/reviewlens`
+- **You get**
+  1. a one-page summary — *"N surface comments → M real issues → only K you actually have to do"*;
+  2. a **prioritized action order** (do this first; point these out; decline these);
+  3. for every comment, **which situation** it is + a **ready-to-paste reply** — point to where the paper already answers it, decline an out-of-scope ask, correct a mistaken premise, or run one small feasible experiment.
+- **Then** — spend your limited rebuttal time on the 2–3 things that actually move the score, and feed the breakdown straight into your rebuttal draft.
+- **Compliance** — ✅ free: venues explicitly allow authors to use AI for writing / rebuttal.
+
+### 🧑‍⚖️ You're a reviewer — before you hit "submit"
+
+- **When** — you (or a junior you're mentoring) drafted a review, maybe with AI help, and want to be sure it's genuinely *helpful*, not padded or unfair.
+- **You bring** — your draft review + the paper.
+- **You run** — `/review-coach`
+- **You get** — a self-check: which of your comments are **out-of-scope / duplicated / unanswerable / already answered in the paper / based on a misread**, where you're **vague vs. specific**, and whether your **score matches** the weaknesses you listed.
+- **Then** — cut the noise, sharpen the real points → a review the author can act on and an AC respects.
+- **Compliance** — ⚠️ follow your venue's current policy (CVPR bans LLMs in reviewing; ICML two-track; NeurIPS experimental) and use a privacy-compliant / local model. ReviewLens **only organizes your own judgment** — it never writes the review or decides accept/reject for you.
+
+> 🏛️ **AC / PC** governance — batch-auditing review quality and flagging padded reviews — is a natural extension of the same engine, and is on the roadmap.
 
 ---
 
