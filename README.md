@@ -32,9 +32,14 @@ ReviewLens takes `a review + the corresponding paper`, judges each comment for w
 
 ## 😫 Why it exists
 
-AI-assisted reviewing is **unstoppable — it's where peer review is heading**. NeurIPS / ICML 2026 have already opened official channels, and studies show that *well-used* AI feedback can improve review quality. But the same force has pushed the **barrier to reviewing** to an all-time low: an inexperienced reviewer plus one-click AI can produce a "looks professional, actually padded" review in minutes.
+AI-assisted reviewing is **unstoppable — it's where peer review is heading**. NeurIPS / ICML 2026 have already opened official channels, and studies show that *well-used* AI feedback can improve reviews. And here's the reality: **whether a venue allows it or bans it, more and more people are already using it.** That genie won't go back in the bottle.
 
-For authors, the real pain isn't "AI writes badly" — it's that **no matter how off-base a comment is, you still have to respond to every single one**. Common forms of padding:
+Which leaves both ends of every review in a bind:
+
+- 🧑‍⚖️ **Reviewers** — AI is tempting (and sometimes sanctioned), but one-click reviews come out padded, off-scope, or against policy. How do you use it *well* and stay compliant?
+- 🧑‍🔬 **Authors** — you're now on the receiving end of AI-padded reviews, and **no matter how off-base a comment is, you still have to answer every one.**
+
+The "padding" a review picks up takes familiar forms:
 
 | Form | Meaning |
 | :-- | :-- |
@@ -43,9 +48,9 @@ For authors, the real pain isn't "AI writes badly" — it's that **no matter how
 | ❓ **Doesn't match** | Misreads the paper, or asks for things the paper already includes |
 | ♻️ **Padding** | The same ask, reworded again and again, faking rigor through sheer count |
 
-Existing AI-for-review tools almost all either **write reviews** or **help authors polish drafts**.
+Existing AI-for-review tools almost all either **write reviews** or **help authors polish drafts** — none of them help with the bind above.
 
-> 🎯 **No one helps you judge whether a review itself holds up, and tell you how to respond. That's where ReviewLens fits.**
+> 🎯 **The question is no longer "should we use AI in review?" — it's "given that we already do, allowed or not, what do authors and reviewers do about it?" That's where ReviewLens begins — and everything below is the answer.**
 
 ---
 
