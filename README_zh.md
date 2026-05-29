@@ -24,7 +24,7 @@ ReviewLens 接收 `一份审稿意见 + 对应论文`，逐条判断每条意见
 
 <div align="center">
 
-> 🧪 **状态**：早期原型。核心流程已在一个完整真实案例（ICLR 2026 *VGR* 论文 / 一位提了 80 条意见的审稿人）上**人工跑通** → 见 [`examples/`](./examples)。CLI 自动化在规划中。
+> 🧪 **状态**：早期原型，但**现在就能用** —— 克隆仓库即可运行内置 skill（见 [快速开始](#-快速开始)）。核心流程已在一个完整真实案例（ICLR 2026 *VGR* / 一位提了 80 条意见的审稿人）上**人工跑通** → [`examples/`](./examples)。`pip` CLI 作为便利项在规划中。
 
 </div>
 
@@ -32,7 +32,7 @@ ReviewLens 接收 `一份审稿意见 + 对应论文`，逐条判断每条意见
 
 ## 😫 为什么需要它
 
-AI 辅助审稿已经全面普及——NeurIPS / ICML 2026 都开了官方通道，研究也证明**用得对**的 AI 反馈能提升 review 质量。但同一股力量把**审稿门槛**拉到了历史最低：经验不足的审稿人 + 一键 AI，几分钟就能产出一份"看着很专业、实则注水"的 review。
+AI 辅助审稿已经**势不可挡——它就是 peer review 未来的趋势**。NeurIPS / ICML 2026 都已开了官方通道，研究也证明**用得对**的 AI 反馈能提升 review 质量。但同一股力量把**审稿门槛**拉到了历史最低：经验不足的审稿人 + 一键 AI，几分钟就能产出一份"看着很专业、实则注水"的 review。
 
 对作者来说，最痛的不是"AI 写得差"，而是 **无论意见多离谱，你都得逐条回应**。常见的注水形态：
 
@@ -173,42 +173,59 @@ flowchart TD
 
 | 工具 | 它做什么 | 服务谁 |
 | :-- | :-- | :-- |
-| OpenAIReview / Publication Assistant / paper-agents | **生成** review / 帮作者**改稿** | 作者（投稿前） |
-| `rebuttal` skill | 帮作者**回应** review | 作者（投稿后） |
-| `review-coach` skill | 帮审稿人**写好** review | 审稿人 |
-| **🔍 ReviewLens（本项目）** | **诊断一份 review 站不站得住 + 教你怎么回** | 作者 / 审稿人 / AC |
+| [OpenAIReview](https://github.com/ChicagoHAI/OpenAIReview)、[paper-agents-manuscript](https://github.com/bdsp-core/paper-agents-manuscript) | **生成** review / 帮作者**改稿** | 作者（投稿前） |
+| 通用大模型（ChatGPT / Claude）直接提问 | 临时帮忙**回应** review | 作者（投稿后） |
+| **🔍 ReviewLens · 作者模式**（[`skills/reviewlens`](./skills/reviewlens)） | **诊断收到的 review 站不站得住 + 教你怎么回** | 作者 |
+| **🔍 ReviewLens · 审稿人模式**（[`skills/review-coach`](./skills/review-coach)） | **提交前自查自己的 review** | 审稿人 |
+
+> 上面两个外部工具是**写** review / 改稿；ReviewLens 反过来——**审一份已有的 review**，逐条告诉你它站不站得住。两种模式都内置在本仓库（见 [快速开始](#-快速开始)）。
 
 ---
 
-## 🛣️ 状态 & Roadmap
+## 🚀 快速开始
+
+ReviewLens 以**agent skill**的形式提供 —— 无需安装、不需要它自己的 API key。**克隆下来就能直接用**，配合任何支持 skill 的 agent（Claude Code、Cursor……）。
+
+```bash
+git clone https://github.com/Dzyy123/review-lens.git
+```
+
+**方式 A —— 原地使用。** 用 Cursor / Claude Code 打开仓库，让 agent 遵循 [`skills/reviewlens/SKILL.md`](./skills/reviewlens)，把你的 review + 论文（PDF 路径或 arXiv 链接）交给它。
+
+**方式 B —— 装成斜杠命令 skill。**
+
+```bash
+# Claude Code
+cp -r review-lens/skills/reviewlens   ~/.claude/skills/
+cp -r review-lens/skills/review-coach ~/.claude/skills/   # 可选：审稿人模式
+
+# Cursor
+cp -r review-lens/skills/reviewlens   ~/.cursor/skills/
+```
+
+然后直接调用：
+
+```text
+/reviewlens  <你的 review> + <paper.pdf | arXiv 链接>
+```
+
+它会读论文（含附录）+ 查相关工作，然后产出分层报告 —— 效果就像 [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md)。
+
+> 📦 `pip install reviewlens` CLI 作为便利项在规划中；上面的 skill 才是当下真实可用的工具。
+
+---
+
+## 🛣️ Roadmap
 
 - [x] 核心方法设计（四维 + 6 种情况 + 应对模板）
 - [x] 第一个端到端真实案例人工跑通（*VGR* / R29m）
-- [ ] CLI MVP：`输入 review + 论文 PDF → 输出拆解报告`
-- [ ] 自动读原文 + 相关工作检索（grounding 流水线）
-- [ ] 自动拆条 / 去重 / 分流
-- [ ] 一键生成 rebuttal 初稿（衔接 `rebuttal` 流程）
-- [ ] 审稿人自查模式（合规守门 + privacy-compliant 后端）
+- [x] 以即用 skill 形式发布 —— 作者模式 + 审稿人模式
+- [ ] `pip` CLI：`输入 review + 论文 PDF → 输出拆解报告`
+- [ ] 跨多位 reviewer 的自动拆条 / 去重 / 分流
+- [ ] 一键衔接 rebuttal 初稿
+- [ ] 强化审稿人自查（合规守门 + privacy-compliant 后端）
 
 ---
-
-## 🚀 安装与使用（规划中）
-
-> ⚠️ 以下为**设计目标**，尚未实现。
-
-```bash
-pip install reviewlens
-
-# 作者侧：拆解一份收到的 review
-reviewlens diagnose --paper paper.pdf --review review.txt --out report.md
-```
-
----
-
-## 🔗 相关项目
-
-- **`rebuttal`** — 把拆解结果接力成一份安全、合规的 rebuttal 初稿。
-- **`review-coach`** — 同一引擎的"审稿人自查"形态。
 
 ## 📄 License
 

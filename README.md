@@ -24,7 +24,7 @@ ReviewLens takes `a review + the corresponding paper`, judges each comment for w
 
 <div align="center">
 
-> 🧪 **Status**: early prototype. The core workflow has been run end-to-end by hand on one complete real case (the ICLR 2026 *VGR* paper / a reviewer who wrote 80 comments) → see [`examples/`](./examples). CLI automation is on the roadmap.
+> 🧪 **Status**: early prototype, **usable today** — clone the repo and run the bundled skill (see [Get started](#-get-started)). Validated end-to-end by hand on one complete real case (ICLR 2026 *VGR* / a reviewer who wrote 80 comments) → [`examples/`](./examples). A `pip` CLI is a convenience on the roadmap.
 
 </div>
 
@@ -32,7 +32,7 @@ ReviewLens takes `a review + the corresponding paper`, judges each comment for w
 
 ## 😫 Why it exists
 
-AI-assisted reviewing has gone mainstream — NeurIPS / ICML 2026 have opened official channels, and studies show that *well-used* AI feedback can improve review quality. But the same force has pushed the **barrier to reviewing** to an all-time low: an inexperienced reviewer plus one-click AI can produce a "looks professional, actually padded" review in minutes.
+AI-assisted reviewing is **unstoppable — it's where peer review is heading**. NeurIPS / ICML 2026 have already opened official channels, and studies show that *well-used* AI feedback can improve review quality. But the same force has pushed the **barrier to reviewing** to an all-time low: an inexperienced reviewer plus one-click AI can produce a "looks professional, actually padded" review in minutes.
 
 For authors, the real pain isn't "AI writes badly" — it's that **no matter how off-base a comment is, you still have to respond to every single one**. Common forms of padding:
 
@@ -173,42 +173,59 @@ flowchart TD
 
 | Tool | What it does | For whom |
 | :-- | :-- | :-- |
-| OpenAIReview / Publication Assistant / paper-agents | **Generate** reviews / help authors **polish drafts** | Authors (pre-submission) |
-| `rebuttal` skill | Help authors **respond to** reviews | Authors (post-submission) |
-| `review-coach` skill | Help reviewers **write better** reviews | Reviewers |
-| **🔍 ReviewLens (this project)** | **Diagnose whether a review holds up + tell you how to respond** | Authors / Reviewers / ACs |
+| [OpenAIReview](https://github.com/ChicagoHAI/OpenAIReview), [paper-agents-manuscript](https://github.com/bdsp-core/paper-agents-manuscript) | **Generate** reviews / help authors **polish drafts** | Authors (pre-submission) |
+| General LLM prompting (ChatGPT / Claude) | Ad-hoc help **responding to** reviews | Authors (post-submission) |
+| **🔍 ReviewLens — author mode** ([`skills/reviewlens`](./skills/reviewlens)) | **Diagnose whether a received review holds up + tell you how to respond** | Authors |
+| **🔍 ReviewLens — reviewer mode** ([`skills/review-coach`](./skills/review-coach)) | **Self-check your own review before submitting** | Reviewers |
+
+> The two external tools above *write* reviews/drafts; ReviewLens does the opposite — it *audits an existing review* and tells you, comment by comment, whether it holds up. Both modes ship in this repo (see [Get started](#-get-started)).
 
 ---
 
-## 🛣️ Status & Roadmap
+## 🚀 Get started
+
+ReviewLens ships as an **agent skill** — no install, no API keys of its own. **Clone it and use it right away** with an agent that supports skills (Claude Code, Cursor, …).
+
+```bash
+git clone https://github.com/Dzyy123/review-lens.git
+```
+
+**Option A — use it in place.** Open the repo in Cursor / Claude Code and ask the agent to follow [`skills/reviewlens/SKILL.md`](./skills/reviewlens), giving it your review + the paper (a PDF path or an arXiv link).
+
+**Option B — install as a slash-command skill.**
+
+```bash
+# Claude Code
+cp -r review-lens/skills/reviewlens   ~/.claude/skills/
+cp -r review-lens/skills/review-coach ~/.claude/skills/   # optional: reviewer mode
+
+# Cursor
+cp -r review-lens/skills/reviewlens   ~/.cursor/skills/
+```
+
+Then just invoke it:
+
+```text
+/reviewlens  <your review> + <paper.pdf | arXiv URL>
+```
+
+It reads the paper (incl. appendix) + related work, then returns the layered report — exactly like [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md).
+
+> 📦 A `pip install reviewlens` CLI is on the roadmap as a convenience; the skill above is the real, working tool today.
+
+---
+
+## 🛣️ Roadmap
 
 - [x] Core method (4 axes + 6 situations + response templates)
 - [x] First end-to-end real case run by hand (*VGR* / R29m)
-- [ ] CLI MVP: `review + paper PDF → breakdown report`
-- [ ] Auto read paper + related-work retrieval (grounding pipeline)
-- [ ] Auto split / dedupe / sort
-- [ ] One-click rebuttal draft (hand off to the `rebuttal` flow)
-- [ ] Reviewer self-check mode (compliance gating + privacy-compliant backend)
+- [x] Ships as a ready-to-use skill — author mode + reviewer mode
+- [ ] `pip` CLI: `review + paper PDF → breakdown report`
+- [ ] Auto split / dedupe / sort across multiple reviewers
+- [ ] One-click handoff to a rebuttal draft
+- [ ] Hardened reviewer self-check (compliance gating + privacy-compliant backend)
 
 ---
-
-## 🚀 Install & Usage (planned)
-
-> ⚠️ The following is a **design target**, not yet implemented.
-
-```bash
-pip install reviewlens
-
-# Author side: break down a received review
-reviewlens diagnose --paper paper.pdf --review review.txt --out report.md
-```
-
----
-
-## 🔗 Related projects
-
-- **`rebuttal`** — turns the breakdown into a safe, venue-compliant rebuttal draft.
-- **`review-coach`** — the "reviewer self-check" form of the same engine.
 
 ## 📄 License
 
