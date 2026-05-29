@@ -4,64 +4,66 @@
 
 # 🔍 ReviewLens
 
-**把一份审稿意见放到显微镜下 —— 逐条告诉你它*站不站得住*，并教你*该怎么回*。**
+**Put a peer review under the microscope — tell, comment by comment, whether it *holds up* and *how to respond*.**
 
-[![status](https://img.shields.io/badge/status-early%20prototype-orange?style=flat-square)](#-状态--roadmap)
-[![for](https://img.shields.io/badge/built%20for-authors-2ea44f?style=flat-square)](#-谁该用)
-[![grounded](https://img.shields.io/badge/grounded-in%20the%20paper-1f6feb?style=flat-square)](#-工作原理)
-[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#-license)
-[![PRs](https://img.shields.io/badge/PRs-welcome-purple?style=flat-square)](#-状态--roadmap)
+[![status](https://img.shields.io/badge/status-early%20prototype-orange?style=flat-square)](#-status--roadmap)
+[![for](https://img.shields.io/badge/built%20for-authors-2ea44f?style=flat-square)](#-who-its-for)
+[![grounded](https://img.shields.io/badge/grounded-in%20the%20paper-1f6feb?style=flat-square)](#-method)
+[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
+[![PRs](https://img.shields.io/badge/PRs-welcome-purple?style=flat-square)](#-status--roadmap)
+
+**English** · [简体中文](./README_zh.md)
 
 </div>
 
 ---
 
-ReviewLens 接收 `一份审稿意见 + 对应论文`，逐条判断每条意见是否成立，把一整页意见自动分成 **6 种情况**，并给出每条的应对建议（含可直接粘贴的话术）。
+ReviewLens takes `a review + the corresponding paper`, judges each comment for whether it actually holds up, automatically sorts a whole page of comments into **6 situations**, and gives a response suggestion for each (with ready-to-paste wording).
 
-> **它只帮你判断和组织，最终判断与文字仍由你拍板。**
+> **It only helps you judge and organize — the final judgment and wording are still yours.**
 
 <div align="center">
 
-> 🧪 **状态**：早期原型。核心流程已在一个完整真实案例（ICLR 2026 *VGR* 论文 / 一位提了 80 条意见的审稿人）上**人工跑通** → 见 [`examples/`](./examples)。CLI 自动化在规划中。
+> 🧪 **Status**: early prototype. The core workflow has been run end-to-end by hand on one complete real case (the ICLR 2026 *VGR* paper / a reviewer who wrote 80 comments) → see [`examples/`](./examples). CLI automation is on the roadmap.
 
 </div>
 
 ---
 
-## 😫 为什么需要它
+## 😫 Why it exists
 
-AI 辅助审稿已经全面普及——NeurIPS / ICML 2026 都开了官方通道，研究也证明**用得对**的 AI 反馈能提升 review 质量。但同一股力量把**审稿门槛**拉到了历史最低：经验不足的审稿人 + 一键 AI，几分钟就能产出一份"看着很专业、实则注水"的 review。
+AI-assisted reviewing has gone mainstream — NeurIPS / ICML 2026 have opened official channels, and studies show that *well-used* AI feedback can improve review quality. But the same force has pushed the **barrier to reviewing** to an all-time low: an inexperienced reviewer plus one-click AI can produce a "looks professional, actually padded" review in minutes.
 
-对作者来说，最痛的不是"AI 写得差"，而是 **无论意见多离谱，你都得逐条回应**。常见的注水形态：
+For authors, the real pain isn't "AI writes badly" — it's that **no matter how off-base a comment is, you still have to respond to every single one**. Common forms of padding:
 
-| 形态 | 含义 |
+| Form | Meaning |
 | :-- | :-- |
-| 🌀 **超纲** | 要求和论文核心贡献无关的实验 |
-| ⛔ **答不了** | 要求 rebuttal 期根本做不完的大批新实验 |
-| ❓ **对不上** | 误读论文，甚至要求论文其实已经写了的东西 |
-| ♻️ **凑数** | 同一诉求反复换皮，靠数量制造"严谨"的假象 |
+| 🌀 **Out of scope** | Demands experiments unrelated to the paper's core contribution |
+| ⛔ **Unanswerable** | Demands a pile of new experiments impossible within the rebuttal window |
+| ❓ **Doesn't match** | Misreads the paper, or asks for things the paper already includes |
+| ♻️ **Padding** | The same ask, reworded again and again, faking rigor through sheer count |
 
-现有的 AI-for-review 工具几乎都在 **帮人写 review** 或 **帮作者改稿**。
+Existing AI-for-review tools almost all either **write reviews** or **help authors polish drafts**.
 
-> 🎯 **没有人帮你判断"一份 review 本身站不站得住"，并教你怎么回。这就是 ReviewLens 的位置。**
+> 🎯 **No one helps you judge whether a review itself holds up, and tell you how to respond. That's where ReviewLens fits.**
 
 ---
 
-## ⚙️ 它怎么工作
+## ⚙️ How it works
 
 <div align="center">
 
-<img src="./assets/how-it-works.png" alt="ReviewLens 工作流：从混乱到清晰" width="92%" />
+<img src="./assets/how-it-works.png" alt="ReviewLens workflow: from chaos to clarity" width="92%" />
 
 </div>
 
 ```mermaid
 flowchart LR
-    A["📄 审稿意见<br/>+ 对应论文"] --> B["① 拆条 + 去重<br/>合并镜像/重复诉求"]
-    B --> C["② 读原文 + 查相关工作<br/>（铁律）"]
-    C --> D["③ 四维判断<br/>对应 / 可答 / 切题 / 冗余"]
-    D --> E["④ 分流到 6 种情况"]
-    E --> F["📋 分层报告<br/>一页结论 + 逐条应对 + 行动顺序"]
+    A["📄 A review<br/>+ the paper"] --> B["① Split + dedupe<br/>merge mirrored/duplicate asks"]
+    B --> C["② Read the paper + related work<br/>(non-negotiable)"]
+    C --> D["③ Judge on 4 axes<br/>grounding / answerability / scope / redundancy"]
+    D --> E["④ Sort into 6 situations"]
+    E --> F["📋 Layered report<br/>summary + per-comment fixes + action order"]
 
     style A fill:#1f2d3d,stroke:#0d6efd,color:#fff
     style C fill:#0b5d4a,stroke:#1f8a65,color:#fff
@@ -70,152 +72,152 @@ flowchart LR
 
 ---
 
-## 🗂️ 6 种情况：把意见对号入座
+## 🗂️ Six situations: sort every comment
 
-每条意见归入下面 6 种之一，每种都配「该不该慌」和「怎么回」：
+Each comment goes into one of these six buckets, each paired with "how worried to be" and "how to respond":
 
-| | 情况 | 含义 | 怎么回 |
+| | Situation | Meaning | How to respond |
 | :--: | :-- | :-- | :-- |
-| 🟢 | **论文里其实已经写了** | 审稿人没看到（多在附录） | 一句话指给他看，**不用做新东西** |
-| ⚪ | **超出本文范围** | 不是这篇论文要解决的 | 礼貌划界，归为 future work |
-| 🔵 | **审稿人弄错了** | 问题基于错误假设 | 礼貌纠正 + 指向证据 |
-| 🟠 | **有道理但工作量太大** | 要求合理但答辩期做不完 | 给一个能做完的小实验，其余留正式版 |
-| 🟣 | **只是缺细节** | 不影响结论，只是没写清 | 打包成一段"补充实现细节" |
-| 🔴 | **真问题，必须认真答** | 论文确实没有、且关系核心 | 把力气主要花在这里 |
+| 🟢 | **Already in the paper** | The reviewer missed it (often in the appendix) | Point them to it in one line — **no new work needed** |
+| ⚪ | **Out of scope** | Not what this paper sets out to solve | Decline politely, mark as future work |
+| 🔵 | **Reviewer is mistaken** | The question rests on a false premise | Correct it politely + point to the evidence |
+| 🟠 | **Valid but too big** | Reasonable, but impossible to finish in the window | Run one feasible small experiment, defer the rest |
+| 🟣 | **Just missing details** | Doesn't affect conclusions, just under-specified | Bundle into one "implementation details" paragraph |
+| 🔴 | **A real gap, must answer** | Genuinely absent and tied to the core claim | Spend your effort mostly here |
 
 ---
 
-## 🔬 一个真实案例：80 条意见，其实只有 4 个要做
+## 🔬 A real case: 80 comments, only ~4 to actually do
 
-**ICLR 2026 投稿 #23089（论文 *VGR*）的一位审稿人** —— rating **4** / confidence **5（最高自信）**，写了 **80 条编号意见**（40 weaknesses + 40 questions）。同篇论文另外 4 位审稿人的问题数只有 **0–3**。
+**One reviewer of ICLR 2026 submission #23089 (the *VGR* paper)** — rating **4** / confidence **5 (the highest)** — wrote **80 numbered comments** (40 weaknesses + 40 questions). The paper's other four reviewers raised only **0–3** each.
 
-ReviewLens 读了原论文 + 相关工作后，把这堆意见层层还原：
+After reading the original paper + related work, ReviewLens peels the pile apart layer by layer:
 
 ```mermaid
 flowchart TD
-    A["🗒️ 80 条编号意见<br/>（看着吓人）"] --> B["♻️ 去重<br/>weaknesses 与 questions 几乎一一镜像"]
-    B --> C["✅ 40 个真正独立的问题"]
-    C --> D["🟢 ~10 条 论文已写"]
-    C --> E["⚪ 9 条 超出范围"]
-    C --> F["🔵 1 条 审稿人弄错"]
-    C --> G["🟣🟠 ~16 条 缺细节 / 给个小实验"]
-    C --> H["🔴 4 条 真问题<br/>（核心仅 1 条）"]
+    A["🗒️ 80 numbered comments<br/>(overwhelming)"] --> B["♻️ Dedupe<br/>weaknesses & questions nearly mirror each other"]
+    B --> C["✅ 40 genuinely distinct concerns"]
+    C --> D["🟢 ~10 already in the paper"]
+    C --> E["⚪ 9 out of scope"]
+    C --> F["🔵 1 reviewer mistaken"]
+    C --> G["🟣🟠 ~16 missing details / small experiment"]
+    C --> H["🔴 4 real gaps<br/>(only 1 is core)"]
 
     style A fill:#7a1f1f,stroke:#c04848,color:#fff
     style C fill:#0b3a5d,stroke:#1f6feb,color:#fff
     style H fill:#7a4a0b,stroke:#f0a040,color:#fff
 ```
 
-> **关键结论**：这份 80 条的 review，去重 + 反指已答 + 划界超纲之后，作者真正要动手的只有 **1 个核心 + 3 个小补充**。
-> **而这个判断，不读原文 + 不查相关工作，根本给不出来。**
+> **Key takeaway**: after deduping, pointing back to what's already answered, and bounding the out-of-scope asks, the author of this 80-comment review really only needs to do **1 core thing + 3 small additions**.
+> **And that judgment is impossible without reading the original paper + related work.**
 
-📎 完整报告：[`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md)
+📎 Full report: [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md)
 
 ---
 
-## 🧠 工作原理
+## 🧠 Method
 
-1. **拆条 + 去重**：把 review 拆成一条条独立诉求，合并重复（案例里 80 → 40）。
-2. **四维判断**（每条打标签）：
+1. **Split + dedupe**: break the review into individual asks and merge duplicates (80 → 40 in the case).
+2. **Judge on four axes** (tag every ask):
 
-   | 维度 | 它问什么 |
+   | Axis | What it asks |
    | :-- | :-- |
-   | 📍 **对应性** | 这条说的，能否在论文里定位到？（有据 / 误读 / 论文其实已写） |
-   | ⏳ **可答性** | 论文范围内可答，还是要求做不完的大实验？ |
-   | 🎯 **切题性** | 关乎核心贡献，还是边缘的鸡蛋里挑骨头？ |
-   | ♻️ **冗余性** | 和别的诉求重复、可合并？ |
+   | 📍 **Grounding** | Can this be located in the paper? (supported / misread / already written) |
+   | ⏳ **Answerability** | Answerable within scope, or an undoable mountain of new experiments? |
+   | 🎯 **Scope** | Tied to the core contribution, or nitpicking at the edges? |
+   | ♻️ **Redundancy** | Does it duplicate another ask and can be merged? |
 
-3. **读原文 + 查相关工作（铁律）**：判断"论文是否其实已写""是否 over-claim""审稿人是否误读"，**必须** grounded 在原论文（含附录）+ 相关工作上。这是 ReviewLens 区别于"只数问题数量"的浅层工具的核心。
-4. **分流 + 给应对**：归入 6 种情况，套用对应的应对模板，输出**分层报告 + 行动顺序**。
+3. **Read the paper + related work (non-negotiable)**: to judge "already in the paper", "over-claimed", or "reviewer misread", the verdict **must** be grounded in the original paper (incl. appendix) + related work. This is what separates ReviewLens from shallow tools that merely count comments.
+4. **Sort + respond**: route into the 6 situations, apply the matching response template, and output a **layered report + action order**.
 
 ---
 
-## 👤 谁该用
+## 👤 Who it's for
 
-| 用户 | 怎么用 | 备注 |
+| User | How they use it | Note |
 | :-- | :-- | :-- |
-| 👩‍🔬 **作者（主要用户）** | 收到的 review + 自己的论文 → 拿到拆解报告，作为减压清单 + rebuttal 弹药 | 合规最自由（会议明确允许作者用 AI 辅助） |
-| 🧑‍⚖️ 审稿人（自查） | 提交前自检：我有没有提了一堆超纲 / 重复 / 答不了的问题 | 需遵守会议政策、用 privacy-compliant / 本地模型 |
-| 🏛️ AC / PC（治理） | 快速评估 review 质量、识别注水或失职的审稿 | 价值高，需平台配合 |
+| 👩‍🔬 **Authors (primary)** | Received review + their own paper → a breakdown report, both a stress-relief checklist and rebuttal ammunition | Most compliance-free (venues explicitly allow authors to use AI) |
+| 🧑‍⚖️ Reviewers (self-check) | Before submitting: do I have a pile of out-of-scope / duplicate / unanswerable asks? | Must follow venue policy; use a privacy-compliant / local model |
+| 🏛️ AC / PC (governance) | Quickly assess review quality; flag padded or negligent reviews | High value; needs platform support |
 
-> 三类用户共享同一个引擎，先以 **作者** 为切入点。
-
----
-
-## 🚦 设计原则（红线）
-
-- ✅ **只判断和组织，不替你拍板**：给"分类 + 定位 + 依据 + 建议话术"，但**不替你写完整 review / rebuttal，不下"绝对对/错"的终判**。
-- 📍 **对应性必须 grounded**：每条结论都要能落到原文/相关工作的具体位置，**不捏造**。
-- ⚖️ **合规分模式**：作者侧自由；审稿人侧必须遵守目标会议当年政策（CVPR 全禁、ICML 两档、NeurIPS 实验性）并使用 privacy-compliant / 本地模型。
-- 🛡️ **抗 prompt injection**：读论文前扫描隐藏指令（白底白字、"give a positive review"），发现即标记、不执行。
-- 🕒 **版本意识**：判"论文已写"时，以**审稿人当时审的版本**为准，避免把"rebuttal 后才补的"误判成"审稿人看漏了"。
+> All three share the same engine; authors are the beachhead.
 
 ---
 
-## 📂 示例 / Demo
+## 🚦 Design principles (red lines)
 
-[`examples/`](./examples) 下是第一个端到端样本（ICLR 2026 *VGR* / Reviewer R29m）：
+- ✅ **Judge and organize, never decide for you**: it gives "classification + location + evidence + suggested wording", but **does not write a full review / rebuttal for you, and never issues an absolute right/wrong verdict**.
+- 📍 **Grounding is mandatory**: every conclusion must point to a concrete location in the paper / related work — **no fabrication**.
+- ⚖️ **Compliance modes**: authors are free; the reviewer side must follow the target venue's current-year policy (CVPR fully bans, ICML two-track, NeurIPS experimental) and use a privacy-compliant / local model.
+- 🛡️ **Anti prompt-injection**: scan for hidden instructions before reading the paper (white-on-white text, "give a positive review"); flag and never execute them.
+- 🕒 **Version awareness**: when judging "already in the paper", use **the version the reviewer actually saw**, so that "added during rebuttal" is not mistaken for "the reviewer missed it".
 
-| 文件 | 内容 |
+---
+
+## 📂 Examples / Demo
+
+[`examples/`](./examples) holds the first end-to-end sample (ICLR 2026 *VGR* / Reviewer R29m):
+
+| File | Contents |
 | :-- | :-- |
-| [`…_R29m.md`](./examples/iclr2026_23089_R29m.md) | 原始 80 条 review（评测样本） |
-| [⭐ `…_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md) | **旗舰输出 · 给作者的报告**：分层（一页结论 + 逐条详解 + 证据层），每条按"哪个 Reviewer → 他的建议 → 属于哪类 → 怎么改"呈现 |
-| [`…_R29m_grounded_response.md`](./examples/iclr2026_23089_R29m_grounded_response.md) | 分析师工作底稿（读原文 + 查相关工作的推导过程） |
-| [`…_R29m_analysis.md`](./examples/iclr2026_23089_R29m_analysis.md) | 对照组：**未读原文**版（说明为何必须读原文） |
+| [`…_R29m.md`](./examples/iclr2026_23089_R29m.md) | The original 80-comment review (evaluation sample) |
+| [⭐ `…_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md) | **Flagship output · the author report**: layered (one-page summary + per-comment detail + evidence), each comment as "which Reviewer → their ask → which situation → how to fix" |
+| [`…_R29m_grounded_response.md`](./examples/iclr2026_23089_R29m_grounded_response.md) | Analyst working notes (the reasoning from reading the paper + related work) |
+| [`…_R29m_analysis.md`](./examples/iclr2026_23089_R29m_analysis.md) | Control: the **paper-not-read** version (shows why reading the paper is essential) |
 
-> 💡 对照 `author_report` 与 `analysis`（未读原文版）能直观看到：**读不读原文，输出质量天差地别**——未读原文时把"论文已写"的条目误判成了"合理的补充要求"。
+> 💡 Comparing `author_report` against `analysis` (paper-not-read) makes it vivid: **whether you read the paper changes the output entirely** — without it, "already in the paper" items get misjudged as "reasonable additional requests".
 
 ---
 
-## 🆚 和现有工具的区别
+## 🆚 How it differs from existing tools
 
-| 工具 | 它做什么 | 服务谁 |
+| Tool | What it does | For whom |
 | :-- | :-- | :-- |
-| OpenAIReview / Publication Assistant / paper-agents | **生成** review / 帮作者**改稿** | 作者（投稿前） |
-| `rebuttal` skill | 帮作者**回应** review | 作者（投稿后） |
-| `review-coach` skill | 帮审稿人**写好** review | 审稿人 |
-| **🔍 ReviewLens（本项目）** | **诊断一份 review 站不站得住 + 教你怎么回** | 作者 / 审稿人 / AC |
+| OpenAIReview / Publication Assistant / paper-agents | **Generate** reviews / help authors **polish drafts** | Authors (pre-submission) |
+| `rebuttal` skill | Help authors **respond to** reviews | Authors (post-submission) |
+| `review-coach` skill | Help reviewers **write better** reviews | Reviewers |
+| **🔍 ReviewLens (this project)** | **Diagnose whether a review holds up + tell you how to respond** | Authors / Reviewers / ACs |
 
 ---
 
-## 🛣️ 状态 & Roadmap
+## 🛣️ Status & Roadmap
 
-- [x] 核心方法设计（四维 + 6 种情况 + 应对模板）
-- [x] 第一个端到端真实案例人工跑通（*VGR* / R29m）
-- [ ] CLI MVP：`输入 review + 论文 PDF → 输出拆解报告`
-- [ ] 自动读原文 + 相关工作检索（grounding 流水线）
-- [ ] 自动拆条 / 去重 / 分流
-- [ ] 一键生成 rebuttal 初稿（衔接 `rebuttal` 流程）
-- [ ] 审稿人自查模式（合规守门 + privacy-compliant 后端）
+- [x] Core method (4 axes + 6 situations + response templates)
+- [x] First end-to-end real case run by hand (*VGR* / R29m)
+- [ ] CLI MVP: `review + paper PDF → breakdown report`
+- [ ] Auto read paper + related-work retrieval (grounding pipeline)
+- [ ] Auto split / dedupe / sort
+- [ ] One-click rebuttal draft (hand off to the `rebuttal` flow)
+- [ ] Reviewer self-check mode (compliance gating + privacy-compliant backend)
 
 ---
 
-## 🚀 安装与使用（规划中）
+## 🚀 Install & Usage (planned)
 
-> ⚠️ 以下为**设计目标**，尚未实现。
+> ⚠️ The following is a **design target**, not yet implemented.
 
 ```bash
 pip install reviewlens
 
-# 作者侧：拆解一份收到的 review
+# Author side: break down a received review
 reviewlens diagnose --paper paper.pdf --review review.txt --out report.md
 ```
 
 ---
 
-## 🔗 相关项目
+## 🔗 Related projects
 
-- **`rebuttal`** — 把拆解结果接力成一份安全、合规的 rebuttal 初稿。
-- **`review-coach`** — 同一引擎的"审稿人自查"形态。
+- **`rebuttal`** — turns the breakdown into a safe, venue-compliant rebuttal draft.
+- **`review-coach`** — the "reviewer self-check" form of the same engine.
 
 ## 📄 License
 
-建议 **MIT**（待项目作者确认）。
+[MIT](./LICENSE) © 2026 Dzyy123
 
 <div align="center">
 
 ---
 
-*ReviewLens —— 让每一条审稿意见，都被看清。*
+*ReviewLens — so every review comment gets seen clearly.*
 
 </div>
