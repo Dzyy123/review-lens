@@ -24,7 +24,7 @@ ReviewLens takes `a review + the corresponding paper`, judges each comment for w
 
 <div align="center">
 
-> 🧪 **Status**: early prototype, **usable today** — clone the repo and run the bundled skill (see [Get started](#-get-started)). Validated end-to-end by hand on one complete real case (ICLR 2026 *VGR* / a reviewer who wrote 80 comments) → [`examples/`](./examples). A `pip` CLI is a convenience on the roadmap.
+> ✅ **Usable today** — clone and run the bundled skill, no install required (see [Get started](#-get-started)). Already **validated end-to-end** on a real case (ICLR 2026 *VGR*, a review with 80 comments) → [`examples/`](./examples). Actively evolving — a `pip` CLI is next.
 
 </div>
 
