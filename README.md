@@ -134,13 +134,13 @@ flowchart TD
 
 ## 👤 Who it's for
 
-Two roles get the most out of it today — **authors** and **reviewers**. Same engine, opposite ends of the same review.
+It's **one tool** — you just declare your role. Both **authors** and **reviewers** run the same `/reviewlens`; only the output and the compliance rules differ.
 
 ### 🧑‍🔬 You're an author — your reviews just came back
 
 - **When** — rebuttal opens and one reviewer dumped dozens of scattered, intimidating comments. You're buried and don't know where to start.
 - **You bring** — the reviews (paste the text) + your paper (PDF path or arXiv link).
-- **You run** — `/reviewlens`
+- **You run** — `/reviewlens` (tell it you're an **author**)
 - **You get**
   1. a one-page summary — *"N surface comments → M real issues → only K you actually have to do"*;
   2. a **prioritized action order** (do this first; point these out; decline these);
@@ -152,7 +152,7 @@ Two roles get the most out of it today — **authors** and **reviewers**. Same e
 
 - **When** — you (or a junior you're mentoring) drafted a review, maybe with AI help, and want to be sure it's genuinely *helpful*, not padded or unfair.
 - **You bring** — your draft review + the paper.
-- **You run** — `/review-coach`
+- **You run** — `/reviewlens` (tell it you're a **reviewer**)
 - **You get** — a self-check: which of your comments are **out-of-scope / duplicated / unanswerable / already answered in the paper / based on a misread**, where you're **vague vs. specific**, and whether your **score matches** the weaknesses you listed.
 - **Then** — cut the noise, sharpen the real points → a review the author can act on and an AC respects.
 - **Compliance** — ⚠️ follow your venue's current policy (CVPR bans LLMs in reviewing; ICML two-track; NeurIPS experimental) and use a privacy-compliant / local model. ReviewLens **only organizes your own judgment** — it never writes the review or decides accept/reject for you.
@@ -192,16 +192,15 @@ Two roles get the most out of it today — **authors** and **reviewers**. Same e
 | :-- | :-- | :-- |
 | [OpenAIReview](https://github.com/ChicagoHAI/OpenAIReview), [paper-agents-manuscript](https://github.com/bdsp-core/paper-agents-manuscript) | **Generate** reviews / help authors **polish drafts** | Authors (pre-submission) |
 | General LLM prompting (ChatGPT / Claude) | Ad-hoc help **responding to** reviews | Authors (post-submission) |
-| **🔍 ReviewLens — author mode** ([`skills/reviewlens`](./skills/reviewlens)) | **Diagnose whether a received review holds up + tell you how to respond** | Authors |
-| **🔍 ReviewLens — reviewer mode** ([`skills/review-coach`](./skills/review-coach)) | **Self-check your own review before submitting** | Reviewers |
+| **🔍 ReviewLens** ([`skills/reviewlens`](./skills/reviewlens)) | **Audit whether a review holds up, comment by comment** — you just declare your role | Authors **and** reviewers |
 
-> The two external tools above *write* reviews/drafts; ReviewLens does the opposite — it *audits an existing review* and tells you, comment by comment, whether it holds up. Both modes ship in this repo (see [Get started](#-get-started)).
+> The external tools above *write* reviews/drafts; ReviewLens does the opposite — it *audits an existing review against the paper*. It's **one tool**: tell it you're an **author** and it tells you how to respond; tell it you're a **reviewer** and it self-checks your draft before you submit.
 
 ---
 
 ## 🚀 Get started
 
-ReviewLens ships as an **agent skill** — no install, no API keys of its own. **Clone it and use it right away** with an agent that supports skills (Claude Code, Cursor, …).
+ReviewLens ships as a single, role-aware **agent skill** — no install, no API keys of its own. **Clone it and use it right away** with an agent that supports skills (Claude Code, Cursor, …).
 
 ```bash
 git clone https://github.com/Dzyy123/review-lens.git
@@ -213,20 +212,20 @@ git clone https://github.com/Dzyy123/review-lens.git
 
 ```bash
 # Claude Code
-cp -r review-lens/skills/reviewlens   ~/.claude/skills/
-cp -r review-lens/skills/review-coach ~/.claude/skills/   # optional: reviewer mode
+cp -r review-lens/skills/reviewlens ~/.claude/skills/
 
 # Cursor
-cp -r review-lens/skills/reviewlens   ~/.cursor/skills/
+cp -r review-lens/skills/reviewlens ~/.cursor/skills/
 ```
 
-Then just invoke it:
+Then just invoke it and **declare your role**:
 
 ```text
-/reviewlens  <your review> + <paper.pdf | arXiv URL>
+/reviewlens  I'm an author  + <review> + <paper.pdf | arXiv URL>
+/reviewlens  I'm a reviewer + <my draft review> + <paper.pdf | arXiv URL>
 ```
 
-It reads the paper (incl. appendix) + related work, then returns the layered report — exactly like [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md).
+It reads the paper (incl. appendix) + related work, then returns the layered report — for authors, exactly like [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md).
 
 > 📦 A `pip install reviewlens` CLI is on the roadmap as a convenience; the skill above is the real, working tool today.
 
@@ -236,7 +235,7 @@ It reads the paper (incl. appendix) + related work, then returns the layered rep
 
 - [x] Core method (4 axes + 6 situations + response templates)
 - [x] First end-to-end real case run by hand (*VGR* / R29m)
-- [x] Ships as a ready-to-use skill — author mode + reviewer mode
+- [x] Ships as a single, role-aware skill (author + reviewer in one)
 - [ ] `pip` CLI: `review + paper PDF → breakdown report`
 - [ ] Auto split / dedupe / sort across multiple reviewers
 - [ ] One-click handoff to a rebuttal draft

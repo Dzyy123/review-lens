@@ -134,13 +134,13 @@ flowchart TD
 
 ## 👤 谁该用
 
-目前最受益的是两类人 —— **作者** 和 **审稿人**。同一个引擎，用在同一份 review 的两端。
+它是**同一个工具** —— 你只要声明自己的角色。**作者** 和 **审稿人** 都跑同一个 `/reviewlens`，只是输出口径和合规要求不同。
 
 ### 🧑‍🔬 你是作者 —— 刚收到审稿意见
 
 - **什么时候用** —— rebuttal 开始，某个 reviewer 甩来几十条零散又吓人的意见，你一头雾水、不知从哪下手。
 - **你需要准备** —— 审稿意见（粘贴文本）+ 你的论文（PDF 路径或 arXiv 链接）。
-- **怎么跑** —— `/reviewlens`
+- **怎么跑** —— `/reviewlens`（告诉它你是**作者**）
 - **你会得到**
   1. 一页结论 —— *"表面 N 条 → 真问题 M 个 → 你真正要做的只有 K 个"*；
   2. 一份**按优先级排好的行动顺序**（先做这个；这些指位置；这些礼貌挡回）；
@@ -152,7 +152,7 @@ flowchart TD
 
 - **什么时候用** —— 你（或你带的新手）写完一版 review，可能用了 AI，想确认它是真**有用**、而不是注水或不公平。
 - **你需要准备** —— 你的 review 初稿 + 论文。
-- **怎么跑** —— `/review-coach`
+- **怎么跑** —— `/reviewlens`（告诉它你是**审稿人**）
 - **你会得到** —— 一份自查：你哪些意见是**超范围 / 重复 / 答不了 / 论文其实已答 / 基于误读**，哪里**太空泛 vs 够具体**，以及你的**评分和你列的 weaknesses 是否自洽**。
 - **然后** —— 砍掉噪音、磨利真问题 → 一份作者能落地、AC 也认可的 review。
 - **合规** —— ⚠️ 遵守你所投会议的当年政策（CVPR 禁用 LLM 审稿；ICML 两档；NeurIPS 实验性），并使用 privacy-compliant / 本地模型。ReviewLens **只帮你组织你自己的判断** —— 绝不替你写 review、不替你决定录用与否。
@@ -192,16 +192,15 @@ flowchart TD
 | :-- | :-- | :-- |
 | [OpenAIReview](https://github.com/ChicagoHAI/OpenAIReview)、[paper-agents-manuscript](https://github.com/bdsp-core/paper-agents-manuscript) | **生成** review / 帮作者**改稿** | 作者（投稿前） |
 | 通用大模型（ChatGPT / Claude）直接提问 | 临时帮忙**回应** review | 作者（投稿后） |
-| **🔍 ReviewLens · 作者模式**（[`skills/reviewlens`](./skills/reviewlens)） | **诊断收到的 review 站不站得住 + 教你怎么回** | 作者 |
-| **🔍 ReviewLens · 审稿人模式**（[`skills/review-coach`](./skills/review-coach)） | **提交前自查自己的 review** | 审稿人 |
+| **🔍 ReviewLens**（[`skills/reviewlens`](./skills/reviewlens)） | **逐条审一份 review 站不站得住** —— 你只要声明自己的角色 | 作者 **和** 审稿人 |
 
-> 上面两个外部工具是**写** review / 改稿；ReviewLens 反过来——**审一份已有的 review**，逐条告诉你它站不站得住。两种模式都内置在本仓库（见 [快速开始](#-快速开始)）。
+> 上面两个外部工具是**写** review / 改稿；ReviewLens 反过来——**对照论文审一份已有的 review**。它是**同一个工具**：说你是**作者**，它告诉你怎么回；说你是**审稿人**，它在你提交前帮你自查草稿。
 
 ---
 
 ## 🚀 快速开始
 
-ReviewLens 以**agent skill**的形式提供 —— 无需安装、不需要它自己的 API key。**克隆下来就能直接用**，配合任何支持 skill 的 agent（Claude Code、Cursor……）。
+ReviewLens 是一个**角色感知的 agent skill** —— 无需安装、不需要它自己的 API key。**克隆下来就能直接用**，配合任何支持 skill 的 agent（Claude Code、Cursor……）。
 
 ```bash
 git clone https://github.com/Dzyy123/review-lens.git
@@ -213,20 +212,20 @@ git clone https://github.com/Dzyy123/review-lens.git
 
 ```bash
 # Claude Code
-cp -r review-lens/skills/reviewlens   ~/.claude/skills/
-cp -r review-lens/skills/review-coach ~/.claude/skills/   # 可选：审稿人模式
+cp -r review-lens/skills/reviewlens ~/.claude/skills/
 
 # Cursor
-cp -r review-lens/skills/reviewlens   ~/.cursor/skills/
+cp -r review-lens/skills/reviewlens ~/.cursor/skills/
 ```
 
-然后直接调用：
+然后直接调用，并**声明你的角色**：
 
 ```text
-/reviewlens  <你的 review> + <paper.pdf | arXiv 链接>
+/reviewlens  我是作者   + <review> + <paper.pdf | arXiv 链接>
+/reviewlens  我是审稿人 + <我的 review 初稿> + <paper.pdf | arXiv 链接>
 ```
 
-它会读论文（含附录）+ 查相关工作，然后产出分层报告 —— 效果就像 [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md)。
+它会读论文（含附录）+ 查相关工作，然后产出分层报告 —— 作者侧效果就像 [`examples/iclr2026_23089_R29m_author_report.md`](./examples/iclr2026_23089_R29m_author_report.md)。
 
 > 📦 `pip install reviewlens` CLI 作为便利项在规划中；上面的 skill 才是当下真实可用的工具。
 
@@ -236,7 +235,7 @@ cp -r review-lens/skills/reviewlens   ~/.cursor/skills/
 
 - [x] 核心方法设计（四维 + 6 种情况 + 应对模板）
 - [x] 第一个端到端真实案例人工跑通（*VGR* / R29m）
-- [x] 以即用 skill 形式发布 —— 作者模式 + 审稿人模式
+- [x] 以单个角色感知 skill 形式发布（作者 + 审稿人合一）
 - [ ] `pip` CLI：`输入 review + 论文 PDF → 输出拆解报告`
 - [ ] 跨多位 reviewer 的自动拆条 / 去重 / 分流
 - [ ] 一键衔接 rebuttal 初稿
